@@ -77,4 +77,4 @@ class Graphics:
             #裁切图片  
             crop_img = im.crop(region)  
             #保存裁切后的图片  
-            crop_img.save(self.outfile)     
+            crop_img.save(self.outfile)
