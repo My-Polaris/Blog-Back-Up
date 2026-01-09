@@ -137,14 +137,28 @@ class Graphics {
           height: x
         };
       } else {
-        // 已经是正方形，直接复制
-        fs.copyFileSync(this.infile, this.outfile);
+        // 已经是正方形
+        if (this.infile !== this.outfile) {
+          fs.copyFileSync(this.infile, this.outfile);
+        }
         return;
       }
 
-      await sharp(this.infile)
-        .extract(region)
-        .toFile(this.outfile);
+      // 如果输入输出是同一个文件，使用临时文件
+      if (this.infile === this.outfile) {
+        const tmpFile = this.outfile + '.tmp';
+        await sharp(this.infile)
+          .extract(region)
+          .toFile(tmpFile);
+        
+        // 删除原文件，重命名临时文件
+        fs.unlinkSync(this.infile);
+        fs.renameSync(tmpFile, this.outfile);
+      } else {
+        await sharp(this.infile)
+          .extract(region)
+          .toFile(this.outfile);
+      }
     } catch (error) {
       throw new Error(`裁剪正方形失败: ${error.message}`);
     }

@@ -100,7 +100,10 @@ async function compress(choose, desDir, srcDir, fileList) {
       const newHeight = Math.round(h / scale);
       
       await sharp(path.join(srcDir, infile))
-        .resize(newWidth, newHeight)
+        .resize(newWidth, newHeight, {
+          fit: 'inside',  // 保持宽高比，类似 PIL 的 thumbnail
+          withoutEnlargement: true
+        })
         .toFile(path.join(desDir, infile));
       
       console.log(`已压缩: ${infile}`);
@@ -220,7 +223,7 @@ async function handlePhoto() {
     makeDirectory(outputDir);
   }
 
-  fs.writeFileSync(outputPath, JSON.stringify(finalDict, null, 2));
+  fs.writeFileSync(outputPath, JSON.stringify(finalDict, null, 2), 'utf8');
   console.log(`已生成 data.json 到 ${outputPath}`);
 }
 
