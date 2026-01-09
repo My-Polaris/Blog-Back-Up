@@ -1,0 +1,30 @@
+{
+  "name": "blog-photo-processor",
+  "version": "1.0.0",
+  "description": "自动化图片处理工具 - 裁剪、压缩、生成JSON元数据并提交到Git",
+  "main": "tool.js",
+  "scripts": {
+    "start": "node tool.js",
+    "cut": "node -e \"require('./tool').cutPhoto()\"",
+    "compress": "node -e \"require('./tool').compressPhoto()\"",
+    "handle": "node -e \"require('./tool').handlePhoto()\"",
+    "git": "node -e \"require('./tool').gitOperation()\""
+  },
+  "keywords": [
+    "image",
+    "photo",
+    "compress",
+    "crop",
+    "sharp",
+    "hexo",
+    "blog"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "sharp": "^0.32.6"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
