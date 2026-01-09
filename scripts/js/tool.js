@@ -264,9 +264,24 @@ async function cutPhoto() {
 function gitOperation() {
   try {
     console.log('开始执行 git 操作...');
-    execSync('git add --all', { stdio: 'inherit' });
-    execSync('git commit -m "add photos"', { stdio: 'inherit' });
-    execSync('git push origin master', { stdio: 'inherit' });
+    
+    // 只添加照片相关的文件
+    const photosDir = path.resolve(__dirname, '../../source/photos/');
+    const minPhotosDir = path.resolve(__dirname, '../../source/min_photos/');
+    
+    execSync(`git add "${photosDir}"`, { stdio: 'inherit', cwd: path.resolve(__dirname, '../../') });
+    execSync(`git add "${minPhotosDir}"`, { stdio: 'inherit', cwd: path.resolve(__dirname, '../../') });
+    
+    // 检查是否有变更需要提交
+    const status = execSync('git status --porcelain', { cwd: path.resolve(__dirname, '../../') }).toString();
+    
+    if (!status.trim()) {
+      console.log('没有需要提交的变更');
+      return;
+    }
+    
+    execSync('git commit -m "add photos"', { stdio: 'inherit', cwd: path.resolve(__dirname, '../../') });
+    execSync('git push origin master', { stdio: 'inherit', cwd: path.resolve(__dirname, '../../') });
     console.log('Git 操作完成！');
   } catch (error) {
     console.error(`Git 操作失败: ${error.message}`);
